@@ -14,3 +14,13 @@ def initalize_db():
         FOREIGN KEY (category_id) REFERENCES Categories(category_id)                    
     )             
         ''' )
+    
+    CURSOR.execute('''
+    CREATE TABLE IF NOT EXISTS Budget (
+        budget_id INTEGER PRIMARY KEY,
+        category_id INTEGER,
+        LIMIT REAL NOT NULL,
+        FOREIGN KEY (category_id) REFERENCES Categories(category_id)
+    )       
+        ''')
+    
