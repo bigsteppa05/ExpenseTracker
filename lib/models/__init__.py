@@ -3,7 +3,7 @@ import sqlite3
 CONN = sqlite3.connect('company.db')
 CURSOR = CONN.cursor()
 
-def initalize_db():
+def initialize_db():
     CURSOR.execute('''
     CREATE TABLE IF  NOR EXISTS Transactions (
         transaction_id INTEGER PRIMARY KEY,
@@ -31,3 +31,9 @@ def initalize_db():
     )       
         ''')
  
+    CONN.commit()
+
+
+if __name__== '__main__':
+    initialize_db()
+    print("Database initialized")
