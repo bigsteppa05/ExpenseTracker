@@ -24,3 +24,10 @@ def initalize_db():
     )       
         ''')
     
+    CUROR.execute('''
+    CREATE TABLE IF NOT EXISTS Categories(
+        category_id INTEGER PRIMARY KEY,
+        name TEXT UNIQUE NOT NULL
+    )       
+        ''')
+ 
