@@ -109,3 +109,50 @@ def manage_transactions():
             break
         else:
             print("Invalid choice, please try again.")
+
+
+def manage_budgets()   :
+    while True:
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        choice = input("Choose an option: ")  
+
+        if choice == '1':
+           category_id = int(input("Enter Category-id: "))
+           budget_limit = float(input("Enter budget limit: "))
+           Budget.create(category_id, budget_limit)
+           print("Budget created successfully.")
+
+        elif choice == '2':
+            budgets = Budget.get_all()
+            for budget in budgets:
+                print(f"{budget.budget_id}: {budget.category_id}, {budget.budget_limit}")
+        elif choice == '3':
+            budget_id = int(input("Enter budget ID to update: "))
+            budget = Budget.find_by_id(budget_id)
+            if budget:
+                category_id = int(input("Enter new category ID: "))
+                budget_limit = float(input("Enter new budget limit: "))
+                budget.update(category_id, budget_limit)
+                print("Budget updated successfully.")
+            else:
+                print("Budget not found.")
+        elif choice == '4':
+            budget_id = int(input("Enter budget ID to delete: "))
+            budget = Budget.find_by_id(budget_id)
+            if budget:
+                budget.delete()
+                print("Budget deleted successfully.")
+            else:
+                print("Budget not found.")
+        elif choice == '5':
+            break
+        else:
+            print("Invalid choice, please try again.")
+
+if __name__ == '__main__':
+    main_menu()
