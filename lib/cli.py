@@ -62,3 +62,50 @@ def manage_categories():
             break
         else:
             print("Invalid choice, please try again.")
+
+
+def manage_transactions():
+    while True:
+        print("Transactions Menu")
+        print("1. Create Transaction")
+        print("2. View All Transactions")
+        print("3. Update Transaction")
+        print("4. Delete Transaction ")
+        print("5. Back to Main Menu")
+        choice = input("Choose an option: ")
+
+        if choice == '1':
+            amount = float(input("Enter amount: "))
+            date = input("Enter date (YYYY-MM-DD): ")
+            category_id = int(input("Enter category ID: "))
+            description = input("Enter description: ")
+            Transaction.create(amount, date, category_id, description)
+            print("Transaction created successfully.")
+        elif choice == '2':
+            transactions = Transaction.get_all()
+            for transaction in transactions:
+                print(f"{transaction.transaction_id}: {transaction.amount}, {transaction.date}, {transaction.category_id}, {transaction.description}")
+        elif choice == '3':
+            transaction_id = int(input("Enter transaction ID to update: "))
+            transaction = Transaction.find_by_id(transaction_id)
+            if transaction:
+                amount = float(input("Enter new amount: "))
+                date = input("Enter new date (YYYY-MM-DD): ")
+                category_id = int(input("Enter new category ID: "))
+                description = input("Enter new description: ")
+                transaction.update(amount, date, category_id, description)
+                print("Transaction updated successfully.")
+            else:
+                print("Transaction not found.")
+        elif choice == '4':
+            transaction_id = int(input("Enter transaction ID to delete: "))
+            transaction = Transaction.find_by_id(transaction_id)
+            if transaction:
+                transaction.delete()
+                print("Transaction deleted successfully.")
+            else:
+                print("Transaction not found.")
+        elif choice == '5':
+            break
+        else:
+            print("Invalid choice, please try again.")
