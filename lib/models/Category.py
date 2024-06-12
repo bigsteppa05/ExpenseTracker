@@ -8,7 +8,7 @@ class Category:
     @classmethod
     def create(cls, name):
         CURSOR.execute('''
-        INSERT INTO Categorie (name)  VALUES (?)
+        INSERT INTO Categories (name)  VALUES (?)
         ''', (name,))  
         CONN.commit()  
         return cls(CURSOR.lastrowid, name)
