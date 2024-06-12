@@ -16,7 +16,7 @@ def initialize_db():
     ''')
     
     CURSOR.execute('''
-    CREATE TABLE IF NOT EXISTS Budget (
+    CREATE TABLE IF NOT EXISTS Budgets (
         budget_id INTEGER PRIMARY KEY,
         category_id INTEGER,
         budget_limit REAL NOT NULL,
@@ -33,8 +33,8 @@ def initialize_db():
  
     CONN.commit()
 
-
 if __name__ == '__main__':
     initialize_db()
     print("Database initialized")
+
 
