@@ -1,4 +1,5 @@
-from lib.database import CONN, CURSOR
+import sqlite3
+from lib.models import CONN, CURSOR
 
 class Transaction:
     def __init__(self, transaction_id, amount, date, category_id, description):
@@ -15,6 +16,7 @@ class Transaction:
             VALUES (?, ?, ?, ?)
         ''', (amount, date, category_id, description))
         CONN.commit()
+        return cls(CURSOR.lastrowid, amount, date, category_id, description)
 
     @classmethod
     def get_all(cls):
@@ -24,18 +26,28 @@ class Transaction:
 
     @classmethod
     def find_by_id(cls, transaction_id):
-        CURSOR.execute('SELECT * FROM Transactions WHERE transaction_id=?', (transaction_id,))
+        CURSOR.execute('SELECT * FROM Transactions WHERE transaction_id = ?', (transaction_id,))
         row = CURSOR.fetchone()
-        return cls(*row) if row else None
+        if row:
+            return cls(*row)
+        return None
 
     def update(self, amount, date, category_id, description):
         CURSOR.execute('''
             UPDATE Transactions
-            SET amount=?, date=?, category_id=?, description=?
-            WHERE transaction_id=?
+            SET amount = ?, date = ?, category_id = ?, description = ?
+            WHERE transaction_id = ?
         ''', (amount, date, category_id, description, self.transaction_id))
         CONN.commit()
+        self.amount = amount
+        self.date = date
+        self.category_id = category_id
+        self.description = description
 
     def delete(self):
-        CURSOR.execute('DELETE FROM Transactions WHERE transaction_id=?', (self.transaction_id,))
+        CURSOR.execute('DELETE FROM Transactions WHERE transaction_id = ?', (self.transaction_id,))
         CONN.commit()
+
+    def __repr__(self):
+        return f"Transaction(transaction_id={self.transaction_id}, amount={self.amount}, date='{self.date}', category_id={self.category_id}, description='{self.description}')"
+
