@@ -1,6 +1,7 @@
+import sys
 from lib.models.Category import Category
-from lib.models.Budget import Budget
 from lib.models.Transaction import Transaction
+from lib.models.Budget import Budget
 
 def main_menu():
     while True:
@@ -9,20 +10,19 @@ def main_menu():
         print("2. Manage Transactions")
         print("3. Manage Budgets")
         print("4. Exit")
-        choice = input("Choose an option")
+        choice = input("Choose an option: ")
 
         if choice == '1':
             manage_categories()
         elif choice == '2':
             manage_transactions()
-        elif choice =="3":
+        elif choice == '3':
             manage_budgets()
         elif choice == '4':
-            break
+            sys.exit()
         else:
             print("Invalid choice, please try again.")
 
-    
 def manage_categories():
     while True:
         print("Categories Menu")
@@ -32,7 +32,7 @@ def manage_categories():
         print("4. Delete Category")
         print("5. Back to Main Menu")
         choice = input("Choose an option: ")
-        
+
         if choice == '1':
             name = input("Enter category name: ")
             Category.create(name)
@@ -40,12 +40,12 @@ def manage_categories():
         elif choice == '2':
             categories = Category.get_all()
             for category in categories:
-                print(f"{category.category_id}: {category.name}")
+                print(category)
         elif choice == '3':
             category_id = int(input("Enter category ID to update: "))
-            name = input("Enter new category name: ")
             category = Category.find_by_id(category_id)
             if category:
+                name = input("Enter new category name: ")
                 category.update(name)
                 print("Category updated successfully.")
             else:
@@ -59,10 +59,9 @@ def manage_categories():
             else:
                 print("Category not found.")
         elif choice == '5':
-            break
+            return
         else:
             print("Invalid choice, please try again.")
-
 
 def manage_transactions():
     while True:
@@ -70,7 +69,7 @@ def manage_transactions():
         print("1. Create Transaction")
         print("2. View All Transactions")
         print("3. Update Transaction")
-        print("4. Delete Transaction ")
+        print("4. Delete Transaction")
         print("5. Back to Main Menu")
         choice = input("Choose an option: ")
 
@@ -84,7 +83,7 @@ def manage_transactions():
         elif choice == '2':
             transactions = Transaction.get_all()
             for transaction in transactions:
-                print(f"{transaction.transaction_id}: {transaction.amount}, {transaction.date}, {transaction.category_id}, {transaction.description}")
+                print(transaction)
         elif choice == '3':
             transaction_id = int(input("Enter transaction ID to update: "))
             transaction = Transaction.find_by_id(transaction_id)
@@ -106,11 +105,9 @@ def manage_transactions():
             else:
                 print("Transaction not found.")
         elif choice == '5':
-            break
+            return
         else:
             print("Invalid choice, please try again.")
-
-
 
 def manage_budgets():
     while True:
