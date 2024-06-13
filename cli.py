@@ -2,6 +2,7 @@ import sys
 from lib.models.Category import Category
 from lib.models.Transaction import Transaction
 from lib.models.Budget import Budget
+from lib.models.Tag import Tag
 
 def main_menu():
     while True:
@@ -9,8 +10,10 @@ def main_menu():
         print("1. Manage Categories")
         print("2. Manage Transactions")
         print("3. Manage Budgets")
-        print("4. Exit")
+        print("4. Manage Tags")
+        print("5. Exit")
         choice = input("Choose an option: ")
+
 
         if choice == '1':
             manage_categories()
@@ -19,7 +22,9 @@ def main_menu():
         elif choice == '3':
             manage_budgets()
         elif choice == '4':
-            sys.exit()
+            manage_tags()
+        elif choice == '5':
+            break
         else:
             print("Invalid choice, please try again.")
 
@@ -62,6 +67,45 @@ def manage_categories():
             return
         else:
             print("Invalid choice, please try again.")
+
+def manage_tags():
+    while True:
+        print("Tags Menu")
+        print("1. Create Tag")
+        print("2. View All Tags")
+        print("3. Delete Tag")
+        print("4. Add Tag to Transaction")
+        print("5. View Tags for a Transaction")
+        print("6. Back to Main Menu")
+        choice = input("Choose an option: ")
+        
+        if choice == '1':
+            name = input("Enter tag name: ")
+            Tag.create(name)
+            print("Tag created successfully.")
+        elif choice == '2':
+            tags = Tag.get_all()
+            for tag in tags:
+                print(tag)
+        elif choice == '3':
+            tag_id = input("Enter tag ID to delete: ")
+            Tag.delete(tag_id)
+            print("Tag deleted successfully.")
+        elif choice == '4':
+            transaction_id = input("Enter transaction ID: ")
+            tag_id = input("Enter tag ID: ")
+            Tag.add_tag_to_transaction(transaction_id, tag_id)
+            print("Tag added to transaction successfully.")
+        elif choice == '5':
+            transaction_id = input("Enter transaction ID: ")
+            tags = Tag.get_tags_for_transaction(transaction_id)
+            for tag in tags:
+                print(tag)
+        elif choice == '6':
+            break
+        else:
+            print("Invalid choice, please try again.")
+
 
 def manage_transactions():
     while True:

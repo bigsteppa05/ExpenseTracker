@@ -5,16 +5,18 @@ class Tag:
         self.tag_id = tag_id
         self.name = name
 
+    def __repr__(self):
+        return f"<Tag(tag_id={self.tag_id}, name='{self.name}')>"
 
     @classmethod
     def create(cls, name):
         CURSOR.execute('''
             INSERT INTO Tags (name)
             VALUES (?)
-        ''', (name))
+        ''', (name,))
         CONN.commit()
         return cls(CURSOR.lastrowid, name)
-    
+
     @classmethod
     def get_all(cls):
         CURSOR.execute('SELECT * FROM Tags')
