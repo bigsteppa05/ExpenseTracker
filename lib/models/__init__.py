@@ -30,11 +30,29 @@ def initialize_db():
         name TEXT UNIQUE NOT NULL
     )       
     ''')
+    
+    CURSOR.execute('''
+    CREATE TABLE IF NOT EXISTS Tags (
+        tag_id INTEGER PRIMARY KEY,
+        name TEXT UNIQUE NOT NULL
+    )
+    ''')
+
+    CURSOR.execute('''
+    CREATE TABLE IF NOT EXISTS TransactionTags (
+        transaction_id INTEGER,
+        tag_id INTEGER,
+        FOREIGN KEY (transaction_id) REFERENCES Transactions(transaction_id),
+        FOREIGN KEY (tag_id) REFERENCES Tags(tag_id),
+        PRIMARY KEY (transaction_id, tag_id)
+    )
+    ''')
  
     CONN.commit()
 
 if __name__ == '__main__':
     initialize_db()
     print("Database initialized")
+
 
 
