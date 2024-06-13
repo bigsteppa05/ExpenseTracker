@@ -1,5 +1,5 @@
-import sqlite3
-from lib.models import CONN, CURSOR
+from lib.database import CURSOR, CONN
+from lib.models.Tag import Tag
 
 class Transaction:
     def __init__(self, transaction_id, amount, date, category_id, description):
@@ -8,6 +8,9 @@ class Transaction:
         self.date = date
         self.category_id = category_id
         self.description = description
+
+    def __repr__(self):
+        return f"<Transaction(transaction_id={self.transaction_id}, amount={self.amount}, date='{self.date}', category_id={self.category_id}, description='{self.description}')>"
 
     @classmethod
     def create(cls, amount, date, category_id, description):
@@ -21,33 +24,26 @@ class Transaction:
     @classmethod
     def get_all(cls):
         CURSOR.execute('SELECT * FROM Transactions')
-        rows = CURSOR.fetchall()
-        return [cls(*row) for row in rows]
+        transactions = CURSOR.fetchall()
+        return [cls(transaction_id, amount, date, category_id, description) for (transaction_id, amount, date, category_id, description) in transactions]
 
     @classmethod
     def find_by_id(cls, transaction_id):
         CURSOR.execute('SELECT * FROM Transactions WHERE transaction_id = ?', (transaction_id,))
-        row = CURSOR.fetchone()
-        if row:
-            return cls(*row)
+        transaction = CURSOR.fetchone()
+        if transaction:
+            return cls(*transaction)
         return None
 
-    def update(self, amount, date, category_id, description):
-        CURSOR.execute('''
-            UPDATE Transactions
-            SET amount = ?, date = ?, category_id = ?, description = ?
-            WHERE transaction_id = ?
-        ''', (amount, date, category_id, description, self.transaction_id))
-        CONN.commit()
-        self.amount = amount
-        self.date = date
-        self.category_id = category_id
-        self.description = description
-
-    def delete(self):
-        CURSOR.execute('DELETE FROM Transactions WHERE transaction_id = ?', (self.transaction_id,))
+    @classmethod
+    def delete(cls, transaction_id):
+        CURSOR.execute('DELETE FROM Transactions WHERE transaction_id = ?', (transaction_id,))
         CONN.commit()
 
-    def __repr__(self):
-        return f"Transaction(transaction_id={self.transaction_id}, amount={self.amount}, date='{self.date}', category_id={self.category_id}, description='{self.description}')"
+    def add_tag(self, tag_id):
+        Tag.add_tag_to_transaction(self.transaction_id, tag_id)
+
+    def get_tags(self):
+        return Tag.get_tags_for_transaction(self.transaction_id)
+
 
